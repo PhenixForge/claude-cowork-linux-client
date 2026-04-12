@@ -1,0 +1,17 @@
+{
+  "name": "cowork-linux",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "install-all": "cd src-frontend && npm install && cd ..",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd src-frontend && npm run dev",
+    "dev:backend": "cd backend && source venv/bin/activate && python main.py",
+    "build": "cd src-frontend && npm run build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

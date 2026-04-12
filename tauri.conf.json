@@ -1,0 +1,30 @@
+{
+  "productName": "Claude Cowork",
+  "version": "0.0.1",
+  "identifier": "com.anthropic.cowork",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../src-frontend/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Claude Cowork",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' https: wss:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage"],
+    "identifier": "cowork",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png"]
+  }
+}
