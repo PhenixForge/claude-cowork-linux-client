@@ -277,6 +277,49 @@ html.dark-mode .error-banner button:hover {
   outline: none;
   border-color: var(--primary);
   background-color: var(--primary-pale);
+  box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+}
+
+.form-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.char-count {
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.char-count.warning {
+  color: #B8860B;
+  font-weight: 500;
+}
+
+.form-error {
+  background: #F5EDED;
+  border-left: 3px solid #9B6B6B;
+  color: #6B3333;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@media (prefers-color-scheme: dark) {
+  .form-error {
+    background: #4D3838;
+    border-left-color: #D49B9B;
+    color: #FFB3B3;
+  }
+}
+
+html.dark-mode .form-error {
+  background: #4D3838;
+  border-left-color: #D49B9B;
+  color: #FFB3B3;
 }
 
 .task-form button {
