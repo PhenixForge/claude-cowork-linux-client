@@ -148,6 +148,71 @@ body {
   text-align: center;
   border-bottom: 1px solid #E6D0D0;
   font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideDown 0.3s ease-out;
+}
+
+.error-banner button {
+  background: transparent;
+  border: none;
+  color: #8B4444;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.error-banner button:hover {
+  color: #6B3333;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark mode error banner */
+@media (prefers-color-scheme: dark) {
+  .error-banner {
+    background: #4D3838;
+    color: #FFB3B3;
+    border-bottom-color: #664444;
+  }
+
+  .error-banner button {
+    color: #FFB3B3;
+  }
+
+  .error-banner button:hover {
+    color: #FFD4D4;
+  }
+}
+
+html.dark-mode .error-banner {
+  background: #4D3838;
+  color: #FFB3B3;
+  border-bottom-color: #664444;
+}
+
+html.dark-mode .error-banner button {
+  color: #FFB3B3;
+}
+
+html.dark-mode .error-banner button:hover {
+  color: #FFD4D4;
 }
 
 /* Main Content */
@@ -469,6 +534,71 @@ body {
   .history-table td {
     padding: 0.75rem;
   }
+}
+
+/* Task Error Display */
+.task-error {
+  background: #F5EDED;
+  border-left: 4px solid #9B6B6B;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #6B3333;
+  font-size: 0.9rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .task-error {
+    background: #4D3838;
+    border-left-color: #D49B9B;
+    color: #FFB3B3;
+  }
+}
+
+html.dark-mode .task-error {
+  background: #4D3838;
+  border-left-color: #D49B9B;
+  color: #FFB3B3;
+}
+
+.task-error strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.task-error code {
+  display: block;
+  background: var(--surface);
+  padding: 0.5rem;
+  border-radius: 3px;
+  margin-top: 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+/* Retry Button */
+.retry-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 0.75rem;
+  transition: all 0.2s;
+}
+
+.retry-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.retry-button:active {
+  transform: translateY(0);
 }
 
 /* Responsive - Mobile */

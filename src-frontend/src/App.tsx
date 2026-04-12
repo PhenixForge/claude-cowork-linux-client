@@ -7,6 +7,7 @@ import {
   notifyTaskCompleted,
   notifyTaskError
 } from './utils/notifications';
+import { apiGet, apiPost, formatErrorMessage } from './utils/api';
 import './App.css';
 
 type View = 'dashboard' | 'history';
@@ -57,9 +58,10 @@ export function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/tasks');
-      if (!response.ok) throw new Error('Failed to load tasks');
-      const newTasks = await response.json() as Task[];
+      const newTasks = await apiGet<Task[]>('/tasks', {
+        maxRetries: 2,
+        timeout: 8000,
+      });
 
       // Check for status changes and send notifications
       newTasks.forEach(task => {
@@ -80,24 +82,23 @@ export function App() {
       setTasks(newTasks);
       setError(null);
     } catch (err) {
-      setError('Could not connect to backend');
+      const errorMessage = formatErrorMessage(err);
+      setError(errorMessage);
       console.error('Error loading tasks:', err);
     }
   };
 
   const handleTaskSubmit = async (taskDescription: string) => {
     try {
-      const response = await fetch('http://localhost:8000/api/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: taskDescription })
+      const newTask = await apiPost<Task>('/tasks', { description: taskDescription }, {
+        maxRetries: 1,
+        timeout: 8000,
       });
-      if (!response.ok) throw new Error('Failed to create task');
-      const newTask = await response.json();
       setTasks([newTask, ...tasks]);
       setError(null);
     } catch (err) {
-      setError('Could not create task');
+      const errorMessage = formatErrorMessage(err);
+      setError(errorMessage);
       console.error('Error creating task:', err);
     }
   };
@@ -122,7 +123,14 @@ export function App() {
         </button>
       </header>
 
-      {error && <div className="error-banner">{error}</div>}
+      {error && (
+        <div className="error-banner">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} aria-label="Close error">
+            ✕
+          </button>
+        </div>
+      )}
 
       <main className="main">
         <div className="container">
