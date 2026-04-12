@@ -24,7 +24,23 @@ export function App() {
   const [view, setView] = useState<View>('dashboard');
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Check localStorage first, then system preference
+    const saved = localStorage.getItem('darkMode');
+    if (saved !== null) return saved === 'true';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const previousTasksRef = useRef<Map<string, string>>(new Map());
+
+  // Apply dark mode to HTML element
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+    localStorage.setItem('darkMode', darkMode.toString());
+  }, [darkMode]);
 
   useEffect(() => {
     // Request notification permission on mount
@@ -86,6 +102,10 @@ export function App() {
     }
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
     <div className="app">
       <header className="header">
@@ -93,6 +113,13 @@ export function App() {
           <h1>✨ Claude Cowork</h1>
           <p className="subtitle">Automate tasks with AI</p>
         </div>
+        <button
+          className="dark-mode-toggle"
+          onClick={toggleDarkMode}
+          title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
+        >
+          <span>{darkMode ? '☀️' : '🌙'}</span>
+        </button>
       </header>
 
       {error && <div className="error-banner">{error}</div>}
