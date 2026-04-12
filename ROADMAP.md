@@ -14,8 +14,9 @@
 | TaskHistory page | ~450 | ✅ Done |
 | App.tsx routing + state | ~400 | ✅ Done |
 | Auto-refresh polling | ~400 | ✅ Done |
+| Desktop Notifications | ~700 | ✅ Done |
 | Tauri basic config | ~300 | ✅ Done |
-| **SUBTOTAL COMPLETED** | **~4,850** | ✅ |
+| **SUBTOTAL COMPLETED** | **~5,550** | ✅ |
 
 ---
 

@@ -1,17 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TaskList } from './components/TaskList';
 import { TaskForm } from './components/TaskForm';
 import { TaskHistory } from './pages/TaskHistory';
+import {
+  requestNotificationPermission,
+  notifyTaskCompleted,
+  notifyTaskError
+} from './utils/notifications';
 import './App.css';
 
 type View = 'dashboard' | 'history';
 
+interface Task {
+  id: string;
+  description: string;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  result?: string;
+  error?: string;
+  created_at: string;
+}
+
 export function App() {
   const [view, setView] = useState<View>('dashboard');
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const previousTasksRef = useRef<Map<string, string>>(new Map());
 
   useEffect(() => {
+    // Request notification permission on mount
+    requestNotificationPermission();
+
     // Initial fetch
     fetchTasks();
 
@@ -25,8 +43,25 @@ export function App() {
     try {
       const response = await fetch('http://localhost:8000/api/tasks');
       if (!response.ok) throw new Error('Failed to load tasks');
-      const data = await response.json();
-      setTasks(data);
+      const newTasks = await response.json() as Task[];
+
+      // Check for status changes and send notifications
+      newTasks.forEach(task => {
+        const previousStatus = previousTasksRef.current.get(task.id);
+
+        if (previousStatus && previousStatus !== task.status) {
+          if (task.status === 'completed' && task.result) {
+            notifyTaskCompleted(task.description);
+          } else if (task.status === 'failed' && task.error) {
+            notifyTaskError(task.description, task.error);
+          }
+        }
+
+        // Update previous status
+        previousTasksRef.current.set(task.id, task.status);
+      });
+
+      setTasks(newTasks);
       setError(null);
     } catch (err) {
       setError('Could not connect to backend');
