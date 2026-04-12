@@ -17,39 +17,43 @@ interface TaskListProps {
 export function TaskList({ tasks, loading, onRefresh }: TaskListProps) {
   const getStatusColor = (status: Task['status']) => {
     switch (status) {
-      case 'pending': return '#ffa500';
-      case 'running': return '#0066ff';
-      case 'completed': return '#00cc00';
-      case 'failed': return '#ff0000';
+      case 'pending': return '#999999';
+      case 'running': return '#8B7355';
+      case 'completed': return '#7A9B8E';
+      case 'failed': return '#9B6B6B';
     }
   };
 
   const getStatusLabel = (status: Task['status']) => {
     switch (status) {
-      case 'pending': return 'Pending';
-      case 'running': return 'Running';
-      case 'completed': return 'Completed';
-      case 'failed': return 'Failed';
+      case 'pending': return 'Queued';
+      case 'running': return 'Processing';
+      case 'completed': return 'Done';
+      case 'failed': return 'Error';
     }
   };
+
+  const activeTasks = tasks.filter(t => t.status !== 'completed');
 
   return (
     <div className="task-list">
       <div className="task-list-header">
-        <h2>Active Tasks</h2>
-        <button onClick={onRefresh} disabled={loading}>
-          {loading ? 'Refreshing...' : 'Refresh'}
-        </button>
+        <h2>Your Tasks</h2>
       </div>
 
-      {tasks.length === 0 ? (
-        <p className="empty-state">No tasks yet. Create one to get started!</p>
+      {activeTasks.length === 0 ? (
+        <p className="empty-state">✨ All caught up! Create a task to get started.</p>
       ) : (
         <div className="tasks">
-          {tasks.map((task) => (
+          {activeTasks.map((task) => (
             <div key={task.id} className="task-card">
               <div className="task-header">
-                <h3>{task.description.substring(0, 50)}...</h3>
+                <div>
+                  <h3>{task.description}</h3>
+                  <p className="task-time">
+                    {new Date(task.created_at).toLocaleString('en-US')}
+                  </p>
+                </div>
                 <span
                   className="status-badge"
                   style={{ backgroundColor: getStatusColor(task.status) }}
@@ -57,13 +61,16 @@ export function TaskList({ tasks, loading, onRefresh }: TaskListProps) {
                   {getStatusLabel(task.status)}
                 </span>
               </div>
-              <p className="task-time">
-                Created: {new Date(task.created_at).toLocaleString('en-US')}
-              </p>
               {task.result && (
                 <div className="task-result">
-                  <strong>Result:</strong>
-                  <p>{task.result.substring(0, 200)}...</p>
+                  <strong>✓ Result</strong>
+                  <p>{task.result}</p>
+                </div>
+              )}
+              {task.error && (
+                <div className="task-result" style={{ borderLeftColor: '#9B6B6B', background: '#F5EDED' }}>
+                  <strong style={{ color: '#9B6B6B' }}>✕ Error</strong>
+                  <p>{task.error}</p>
                 </div>
               )}
             </div>

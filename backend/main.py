@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -6,6 +7,9 @@ import uvicorn
 
 from database import init_db
 from task_manager import TaskManager
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configuration
 API_KEY = os.getenv("ANTHROPIC_API_KEY")

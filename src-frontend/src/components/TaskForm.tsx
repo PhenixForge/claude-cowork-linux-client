@@ -20,19 +20,19 @@ export function TaskForm({ onSubmit }: TaskFormProps) {
 
   return (
     <form className="task-form" onSubmit={handleSubmit}>
+      <h3>Create a new task</h3>
       <div className="form-group">
-        <label htmlFor="task-input">New Task</label>
+        <label htmlFor="task-input">What would you like Claude to do?</label>
         <textarea
           id="task-input"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe what you want Claude to do..."
-          rows={4}
+          placeholder="Write a poem about coding, analyze data, generate ideas..."
           disabled={submitting}
         />
       </div>
       <button type="submit" disabled={submitting || !description.trim()}>
-        {submitting ? 'Creating...' : 'Create Task'}
+        {submitting ? '⏳ Creating...' : '✨ Send Task'}
       </button>
     </form>
   );
