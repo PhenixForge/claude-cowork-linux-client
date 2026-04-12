@@ -22,14 +22,14 @@
 
 ## ⏳ Remaining Features (Priority Order)
 
-### Phase 1: UX & Stability (~1,900 tokens)
+### Phase 1: UX & Stability (~1,200 tokens)
 
-| # | Feature | Tokens | Rationale |
-|---|---|---:|---|
-| 1️⃣ | **Desktop Notifications** | ~700 | 🎯 Core feature: alert when task completes/fails |
-| 2️⃣ | **Complete CSS Styling** | ~600 | 👁️ Polish UI (dark mode, responsive layout) |
-| 3️⃣ | **Enhanced Error Handling** | ~400 | 🛡️ Retry logic, timeouts, user-friendly error messages |
-| 4️⃣ | **Form Validation + Input Sanitization** | ~200 | 🔒 Basic security |
+| # | Feature | Tokens | Status | Rationale |
+|---|---|---:|---|---|
+| 1️⃣ | **Desktop Notifications** | ~700 | ✅ Done | 🎯 Core feature: alert when task completes/fails |
+| 2️⃣ | **Complete CSS Styling** | ~400 | ⏳ Next | 👁️ Polish UI (dark mode, responsive layout) |
+| 3️⃣ | **Enhanced Error Handling** | ~400 | ⏳ Pending | 🛡️ Retry logic, timeouts, user-friendly error messages |
+| 4️⃣ | **Form Validation + Input Sanitization** | ~200 | ⏳ Pending | 🔒 Basic security |
 
 ### Phase 2: Desktop Integration (~1,400 tokens)
 
@@ -69,14 +69,25 @@ Phase 3 (20%): Make app **shippable**
 
 ## 📊 What's Done This Session
 
-✅ **Auto-refresh polling implemented** — Tasks now update live every 2 seconds
-✅ **Complete translation to English** — All code, docs, and UI strings
+✅ **Initial project setup** — Backend (FastAPI), Frontend (React), Desktop (Tauri)
+✅ **Auto-refresh polling** — Tasks update live every 2 seconds  
+✅ **Complete English translation** — All code, docs, and UI strings
+✅ **Design refactor** — Neutral palette (brown, gray, white, black)
+✅ **GitHub repository** — Published to PhenixForge/cowork-linux
+✅ **Desktop Notifications** — Alert users when tasks complete/fail
+✅ **API Strategy documented** — Three options in API-OPTIONS.md
+
+**Tokens Used This Session**: ~5,550 of 10,000+ estimated total
 
 ## Next Steps Available
 
-1. **Desktop Notifications** (~700 tokens) — Best UX next win
-2. **CSS Styling** (~600 tokens) — Make it look polished
-3. **Error Handling** (~400 tokens) — Robustness
+**Continue Phase 1 UX & Stability:**
+1. **CSS Styling Enhancements** (~400 tokens) — Responsive, dark mode support
+2. **Error Handling** (~400 tokens) — Retry logic, better error messages
+3. **Form Validation** (~200 tokens) — Input sanitization, user guidance
+
+**Or Jump to Phase 2:**
+- **Tauri Desktop Integration** — Auto-launch backend from app (~800 tokens)
 
 ---
 
