@@ -1,6 +1,6 @@
 # Claude Cowork for Linux
 
-Desktop application to automate autonomous tasks with Claude AI.
+Claud Cowork Desktop application does not exist for Linux. I aim at practicing and experimenting creating a Claude Linux open source client.
 
 ## Architecture
 
