@@ -9,9 +9,12 @@
     "dev:frontend": "cd src-frontend && npm run dev",
     "dev:backend": "cd backend && source venv/bin/activate && python main.py",
     "build": "cd src-frontend && npm run build",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
     "tauri": "tauri"
   },
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "@tauri-apps/cli": "^2"
   }
 }
