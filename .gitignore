@@ -49,3 +49,6 @@ src-tauri/Cargo.lock
 # Env
 .env
 .env.local
+
+# Claude Code
+.claude/settings.local.json
