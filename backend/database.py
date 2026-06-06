@@ -1,11 +1,17 @@
 import asyncio
+import os
 from datetime import datetime
 from sqlalchemy import Column, String, Text, DateTime, Enum as SQLEnum
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 from enum import Enum
 
-DATABASE_URL = "sqlite+aiosqlite:///./cowork.db"
+# Chemin de la base de données configurable via variable d'environnement
+# Par défaut : répertoire data/ dans le répertoire de travail
+DB_PATH = os.getenv("DB_PATH", "data/cowork.db")
+# Créer le répertoire si nécessaire
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+DATABASE_URL = f"sqlite+aiosqlite:///{DB_PATH}"
 
 engine = create_async_engine(DATABASE_URL, echo=False, future=True)
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

@@ -1,9 +1,17 @@
 import os
+import logging
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 from database import init_db
 from task_manager import TaskManager
@@ -15,17 +23,24 @@ API_KEY = os.getenv("ANTHROPIC_API_KEY")
 if not API_KEY:
     raise ValueError("ANTHROPIC_API_KEY not configured")
 
+# Configuration du modèle Claude (configurable via env)
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-3-5-sonnet-20241022")
+CLAUDE_TIMEOUT = float(os.getenv("CLAUDE_TIMEOUT", "120"))  # 120 seconds default
+
 app = FastAPI(title="Claude Cowork Backend")
+
+# Configuration CORS sécurisée
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,tauri://localhost,http://tauri.localhost").split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "tauri://localhost", "http://tauri.localhost"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
-task_manager = TaskManager(API_KEY)
+task_manager = TaskManager(API_KEY, model=CLAUDE_MODEL, timeout=CLAUDE_TIMEOUT)
 
 
 class TaskCreate(BaseModel):
@@ -78,7 +93,8 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.receive_text()
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
-    except Exception:
+    except Exception as e:
+        logger.error("WebSocket error (details masked for security)")
         ws_manager.disconnect(websocket)
 
 

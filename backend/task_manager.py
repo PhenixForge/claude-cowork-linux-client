@@ -10,16 +10,31 @@ from ws_manager import ws_manager
 
 
 class TaskManager:
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, model: str = "claude-3-5-sonnet-20241022", timeout: float = 120.0):
         self.client = AsyncAnthropic(api_key=api_key)
+        self.model = model
+        self.timeout = timeout
 
     async def create_task(self, description: str) -> dict:
+        # Validation de la description
+        if not description or not isinstance(description, str):
+            raise ValueError("Task description is required and must be a string")
+        
+        # Limite de longueur pour éviter les abus
+        max_length = 10000
+        if len(description.strip()) > max_length:
+            raise ValueError(f"Task description cannot exceed {max_length} characters")
+        
+        # Validation des caractères (sécurité)
+        if not all(c.isprintable() or c.isspace() for c in description):
+            raise ValueError("Task description contains invalid characters")
+        
         task_id = str(uuid.uuid4())
 
         async with async_session() as session:
             task = Task(
                 id=task_id,
-                description=description,
+                description=description.strip(),
                 status=TaskStatus.PENDING
             )
             session.add(task)
@@ -46,10 +61,14 @@ class TaskManager:
             await ws_manager.broadcast(self._task_to_dict(task))
 
             try:
-                message = await self.client.messages.create(
-                    model="claude-3-5-sonnet-20241022",
-                    max_tokens=1024,
-                    messages=[{"role": "user", "content": task.description}]
+                # Utiliser asyncio.wait_for pour ajouter un timeout
+                message = await asyncio.wait_for(
+                    self.client.messages.create(
+                        model=self.model,
+                        max_tokens=1024,
+                        messages=[{"role": "user", "content": task.description}]
+                    ),
+                    timeout=self.timeout
                 )
 
                 task.status = TaskStatus.COMPLETED
@@ -58,9 +77,16 @@ class TaskManager:
                 await session.commit()
                 await ws_manager.broadcast(self._task_to_dict(task))
 
-            except Exception as e:
+            except asyncio.TimeoutError:
                 task.status = TaskStatus.FAILED
-                task.error = str(e)
+                task.error = "Request timeout: Claude took too long to respond"
+                task.updated_at = datetime.utcnow()
+                await session.commit()
+                await ws_manager.broadcast(self._task_to_dict(task))
+            except Exception as e:
+                # Masquer les détails sensibles dans l'erreur stockée
+                task.status = TaskStatus.FAILED
+                task.error = "Task execution failed"
                 task.updated_at = datetime.utcnow()
                 await session.commit()
                 await ws_manager.broadcast(self._task_to_dict(task))
